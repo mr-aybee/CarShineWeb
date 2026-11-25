@@ -34,7 +34,7 @@ This is a web application for CarShine, a car wash and detailing service. It con
 ### 3. Running the Application
 
 1.  **Open the Solution:**
-    *   Open `CarShine.sln` in Visual Studio.
+    *   Open `CarShineWeb.sln` in Visual Studio.
 2.  **Set Startup Projects:**
     *   In the Solution Explorer, right-click the solution and choose "Set Startup Projects...".
     *   Select "Multiple startup projects".
@@ -43,3 +43,13 @@ This is a web application for CarShine, a car wash and detailing service. It con
     *   Press F5 or click the "Start" button in Visual Studio to launch the application.
 
 This will start both the web application and the backend service. You can now access the application in your web browser.
+
+## Repository architecture
+
+- `CarShineWeb/` — web application.
+- `CarShineServices/` — backend service.
+- `initial.sql` — database initialization script.
+
+## Maintenance and deployment
+
+This is a historical .NET Framework application. Build and deployment have not been independently verified. Use a disposable SQL Server database for evaluation, keep connection credentials out of source control, and review the schema script before executing it.
