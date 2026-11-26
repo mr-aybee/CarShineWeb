@@ -1,55 +1,101 @@
+<div align="center">
 
-# CarShine Web Application
+# 🚗 CarShine
 
-This is a web application for CarShine, a car wash and detailing service. It consists of a web front-end and a backend service.
+**Website and booking platform for a car-wash and detailing business, with background e-mail and SMS notifications.**
 
-## Prerequisites
+[![CI](https://github.com/mr-aybee/car-shine-web/actions/workflows/ci.yml/badge.svg)](https://github.com/mr-aybee/car-shine-web/actions/workflows/ci.yml)
+![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.6-512BD4)
+![ASP.NET](https://img.shields.io/badge/ASP.NET-Web%20Forms-68217A)
+![database](https://img.shields.io/badge/database-SQL%20Server-CC2927)
+![UI](https://img.shields.io/badge/UI-Bootstrap-7952B3)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-*   .NET Framework 4.6 or higher
-*   Microsoft SQL Server
+</div>
 
-## Setup
+---
 
-### 1. Database Setup
+## Overview
 
-1.  **Create the Database:**
-    *   Open SQL Server Management Studio (SSMS).
-    *   Connect to your database engine.
-    *   Right-click on "Databases" and select "New Database".
-    *   Enter "CarShine" as the database name and click "OK".
+CarShine is a customer-facing site for a car-care business. Visitors browse services and the gallery, contact the business and book appointments online. Bookings flow through an ASMX web service into SQL Server, and the **CarShineServices** desktop service sends confirmation e-mails and SMS messages.
 
-2.  **Run the Initialization Script:**
-    *   Open the `initial.sql` file in SSMS.
-    *   Make sure the "CarShine" database is selected from the available databases dropdown.
-    *   Execute the script. This will create the necessary tables and stored procedures.
+## Features
 
-### 2. Configure Connection String
+- 🏠 **Marketing pages** — home, about, gallery and contact
+- 📅 **Online booking** for wash and detailing services
+- 🔌 **ASMX web service** (`MainService.asmx`) for bookings and data access
+- ✉️ **E-mail** and 📱 **SMS** notifications from a background service
+- 🎨 Responsive Bootstrap (SCSS) front end
 
-1.  **Open `Web.config`:**
-    *   Locate the `Web.config` file in the `CarShineWeb` project.
-2.  **Update Connection String:**
-    *   Find the `<connectionStrings>` section.
-    *   Modify the `dBCarShine` connection string to point to your SQL Server instance and the `CarShine` database. You may need to update the `Server`, `Database`, `User ID`, and `Password` attributes.
+## Architecture
 
-### 3. Running the Application
+```mermaid
+flowchart LR
+    B[Browser] --> W[CarShineWeb<br/>ASP.NET Web Forms]
+    W --> WS[MainService.asmx]
+    WS --> DB[(SQL Server<br/>initial.sql)]
+    S[CarShineServices<br/>WinForms service] -->|web reference| WS
+    S --> E[Email service] & SMS[SMS service]
+```
 
-1.  **Open the Solution:**
-    *   Open `CarShineWeb.sln` in Visual Studio.
-2.  **Set Startup Projects:**
-    *   In the Solution Explorer, right-click the solution and choose "Set Startup Projects...".
-    *   Select "Multiple startup projects".
-    *   Set both `CarShine.Web` and `CarShine.Services` to "Start".
-3.  **Run the Application:**
-    *   Press F5 or click the "Start" button in Visual Studio to launch the application.
+## Tech stack
 
-This will start both the web application and the backend service. You can now access the application in your web browser.
+| Component | Technology |
+| --- | --- |
+| Website | C# · ASP.NET Web Forms · .NET Framework 4.6 |
+| Front end | Bootstrap (SCSS), jQuery |
+| API | ASMX web service |
+| Notifications | WinForms service with e-mail and SMS controllers |
+| Data | SQL Server |
 
-## Repository architecture
+## Getting started
 
-- `CarShineWeb/` — web application.
-- `CarShineServices/` — backend service.
-- `initial.sql` — database initialization script.
+### Prerequisites
 
-## Maintenance and deployment
+- Windows with Visual Studio 2019+ (ASP.NET and web development workload)
+- SQL Server (Express or LocalDB)
 
-This is a historical .NET Framework application. Build and deployment have not been independently verified. Use a disposable SQL Server database for evaluation, keep connection credentials out of source control, and review the schema script before executing it.
+### Setup
+
+```shell
+git clone https://github.com/mr-aybee/car-shine-web.git
+cd car-shine-web
+nuget restore CarShineWeb.sln
+```
+
+1. Create a `CarShine` database and run `initial.sql`.
+2. Set the `dBCarShine` connection string in `CarShineWeb/Web.config` (replace `CHANGE_ME`; keep real credentials out of source control).
+3. Open `CarShineWeb.sln`, set **CarShineWeb** as the startup project and run with IIS Express.
+
+## Usage
+
+- Customers browse **Services** and **Gallery**, then book on **Booking**.
+- Bookings are stored through `MainService.asmx`.
+- Run **CarShineServices** to send booking confirmations by e-mail and SMS (configure provider settings in its `App.config`).
+
+## Project structure
+
+```text
+car-shine-web/
+├── CarShineWeb/          # Web Forms site: Default, About, Gallery, Contact, Booking, Services/MainService.asmx
+├── CarShineServices/     # Notification service: ServiceControllers/EmailService, SMSService
+└── initial.sql           # Database schema
+```
+
+## Development
+
+- Build with `msbuild CarShineWeb.sln`.
+- CI builds the solution on Windows for every push and pull request.
+- Use a disposable database and test mail/SMS accounts.
+
+## Contributing
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, build and pull-request workflow. Please report security issues privately through [GitHub security advisories](https://github.com/mr-aybee/car-shine-web/security/advisories/new), not public issues.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating you agree to uphold it.
+
+## License
+
+Released under the [MIT License](LICENSE). © 2026 Abdullah Shahid.
